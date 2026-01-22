@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2026寒假计划</title>
+    <style>
+        :root {
+            --primary: #556b2f; /* 深橄榄绿 */
+            --secondary: #a3b18a; /* 鼠尾草绿 */
+            --accent: #e67e22; /* 活力橙 */
+            --bg: #f8f9fa;
+            --card-bg: rgba(255, 255, 255, 0.9);
+        }
+
+        body {
+            font-family: 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+            background: linear-gradient(135deg, #fdfaf1 0%, #e8f5e9 100%);
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* 头部卡片 */
+        .header-card {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 24px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,0.8);
+        }
+
+        h1 { margin: 0; color: var(--primary); font-size: 1.8rem; }
+        
+        /* 倒计时样式 */
+        #countdown {
+            font-size: 0.9rem;
+            color: var(--accent);
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        /* 金句样式 */
+        #quote {
+            font-style: italic;
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 15px;
+            padding: 0 20px;
+        }
+
+        /* 进度条 */
+        .progress-container {
+            margin: 20px 0;
+            background: #eee;
+            border-radius: 10px;
+            height: 10px;
+            overflow: hidden;
+        }
+        #progress-bar {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, var(--secondary), var(--primary));
+            transition: width 0.5s ease;
+        }
+
+        /* 任务列表 */
+        .schedule-list {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 24px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+
+        .item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            margin-bottom: 12px;
+            border-radius: 15px;
+            background: white;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid #f0f0f0;
+            cursor: pointer;
+        }
+
+        .item:hover {
+            transform: scale(1.02);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .item.done {
+            background: #f1f1f1;
+            opacity: 0.6;
+        }
+
+        .checkbox {
+            width: 24px;
+            height: 24px;
+            border: 2px solid var(--secondary);
+            border-radius: 50%;
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .done .checkbox {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .done .checkbox::after {
+            content: '✓';
+            color: white;
+            font-size: 14px;
+        }
+
+        .time-box {
+            font-family: 'Courier New', Courier, monospace;
+            background: #f0f4f0;
+            color: var(--primary);
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            margin-right: 12px;
+            font-weight: bold;
+        }
+
+        .task-content .title { font-weight: bold; display: block; }
+        .task-content .desc { font-size: 0.8rem; color: #888; }
+
+        .done .task-content { text-decoration: line-through; }
+
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #999;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-card">
+        <h1>🌿 2026 寒假成长清单</h1>
+        <div id="countdown">正在计算寒假剩余时间...</div>
+        <div id="quote">"种一棵树最好的时间是十年前，其次是现在。"</div>
+        
+        <div style="margin-top: 20px; font-size: 0.8rem; color: #555;">今日完成进度：<span id="progress-text">0%</span></div>
+        <div class="progress-container">
+            <div id="progress-bar"></div>
+        </div>
+    </div>
+
+    <div class="schedule-list" id="task-list">
+        </div>
+
+    <footer>
+        © 2026 坚持自律 · 向阳而生
+               shadows-year™
+    </footer>
+</div>
+
+<script>
+    const tasks = [
+        { time: "07:00", title: "晨间唤醒", desc: "听15min英语，唤醒大脑" },
+        { time: "07:30", title: "高效背诵", desc: "20词 + 古诗词/文言文" },
+        { time: "08:40", title: "理科专题", desc: "深度思考，解决10道难题" },
+        { time: "12:00", title: "午能补给", desc: "营养午餐 + 30min高质量午睡" },
+        { time: "14:00", title: "综合提升", desc: "分科作业 + 名著深度阅读" },
+        { time: "16:30", title: "体能训练", desc: "跳绳1000次或户外慢跑" },
+        { time: "19:30", title: "晚间总结", desc: "复盘错题，规划明天" },
+        { time: "22:00", title: "静心睡眠", desc: "远离手机，晚安 🌙" }
+    ];
+
+    const quotes = [
+        "每一个不曾起舞的日子，都是对生命的辜负。",
+        "自律的程度，决定你人生的高度。",
+        "所有的努力，都会在往后的日子里开花结果。",
+        "星光不问赶路人，时光不负有心人。"
+    ];
+
+    function init() {
+        // 随机金句
+        document.getElementById('quote').innerText = `"${quotes[Math.floor(Math.random() * quotes.length)]}"`;
+
+        // 渲染列表
+        const listEl = document.getElementById('task-list');
+        tasks.forEach((task, index) => {
+            const item = document.createElement('div');
+            item.className = 'item';
+            item.innerHTML = `
+                <div class="checkbox"></div>
+                <div class="time-box">${task.time}</div>
+                <div class="task-content">
+                    <span class="title">${task.title}</span>
+                    <span class="desc">${task.desc}</span>
+                </div>
+            `;
+            item.onclick = () => toggleTask(item);
+            listEl.appendChild(item);
+        });
+
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+    }
+
+    function toggleTask(el) {
+        el.classList.toggle('done');
+        updateProgress();
+    }
+
+    function updateProgress() {
+        const total = tasks.length;
+        const done = document.querySelectorAll('.item.done').length;
+        const percent = Math.round((done / total) * 100);
+        document.getElementById('progress-bar').style.width = percent + '%';
+        document.getElementById('progress-text').innerText = percent + '%';
+    }
+
+    function updateCountdown() {
+        // 假设寒假开学日期是 2026-02-22
+        const target = new Date('2026-03-05T00:00:00');
+        const now = new Date();
+        const diff = target - now;
+
+        if (diff <= 0) {
+            document.getElementById('countdown').innerText = "开学啦，新学期加油！";
+            return;
+        }
+
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+        const mins = Math.floor((diff / (1000 * 60)) % 60);
+        const secs = Math.floor((diff / 1000) % 60);
+
+        document.getElementById('countdown').innerText = `距离开学还剩：${days}天 ${hours}时 ${mins}分 ${secs}秒`;
+    }
+
+    window.onload
